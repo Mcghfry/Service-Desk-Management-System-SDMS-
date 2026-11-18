@@ -1,120 +1,101 @@
-const guidance = {
-  network: {
-    title: 'Koneksi jaringan / Wi-Fi',
-    steps: ['Pastikan Wi-Fi perangkat menyala dan mode pesawat tidak aktif.', 'Putuskan koneksi lalu sambungkan kembali ke jaringan yang benar.', 'Coba buka layanan dari perangkat lain untuk mengecek apakah gangguan terjadi pada jaringan atau perangkat.'],
-    followup: 'Apakah perangkat lain juga mengalami gangguan yang sama?'
-  },
-  device: {
-    title: 'Laptop atau komputer lambat',
-    steps: ['Simpan pekerjaan yang sedang terbuka.', 'Tutup aplikasi yang tidak digunakan, lalu periksa apakah ruang penyimpanan hampir penuh.', 'Mulai ulang perangkat jika kondisinya aman dan tidak ada proses penting yang berjalan.'],
-    followup: 'Apakah perangkat terasa lambat sejak dinyalakan atau setelah membuka aplikasi tertentu?'
-  },
-  account: {
-    title: 'Masalah akun dan akses',
-    steps: ['Pastikan nama pengguna dan alamat layanan sudah benar.', 'Periksa apakah Caps Lock aktif dan koneksi internet tersedia.', 'Gunakan proses reset kata sandi resmi jika tersedia. Jangan kirim kata sandi atau kode OTP kepada siapa pun.'],
-    followup: 'Apakah muncul pesan kesalahan tertentu saat kamu mencoba masuk?'
-  },
-  software: {
-    title: 'Aplikasi atau software',
-    steps: ['Catat nama aplikasi dan pesan kesalahan yang tampil.', 'Tutup lalu buka kembali aplikasi, kemudian coba ulangi langkah yang memunculkan masalah.', 'Periksa apakah aplikasi lain juga terdampak sebelum melanjutkan troubleshooting.'],
-    followup: 'Kapan masalah mulai terjadi dan apakah ada pesan kesalahan?'
-  }
-};
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f8fc" />
+  <meta name="description" content="DeskFlow — konsep Service Desk Management System untuk pelaporan, pemecahan masalah, dan pelacakan gangguan layanan." />
+  <title>DeskFlow — Service Desk Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="DeskFlow beranda">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      <span>desk<span class="brand-light">flow</span></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false"><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Navigasi utama">
+      <a href="#fitur">Fitur</a>
+      <a href="#alur">Alur kerja</a>
+      <a href="#demo">Coba demo</a>
+      <a class="nav-cta" href="#demo">Jelajahi sistem <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
 
-const form = document.getElementById('ticketForm');
-const category = document.getElementById('issueCategory');
-const detail = document.getElementById('issueDetail');
-const assistantContent = document.getElementById('assistantContent');
-const ticketDemo = document.getElementById('ticketDemo');
-const ticketTitle = document.getElementById('ticketTitle');
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> PORTOFOLIO PROJECT · SERVICE DESK</div>
+        <h1>Bantuan IT yang<br /><span>lebih mudah.</span></h1>
+        <p class="hero-description">Satu tempat untuk melaporkan gangguan, mencoba solusi mandiri dengan AI, dan mengikuti progres bantuan sampai masalah selesai.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#demo">Coba alur demo <span aria-hidden="true">→</span></a>
+          <a class="text-link" href="#fitur">Lihat kemampuan sistem <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-proof"><div class="avatar-stack"><span>IT</span><span>AI</span><span>SD</span></div><p>Dirancang dengan fokus pada pengalaman pengguna dan alur dukungan yang jelas.</p></div>
+      </div>
 
-function showGuidance(key, description) {
-  const item = guidance[key];
-  if (!item) return;
-  assistantContent.replaceChildren();
-  const response = document.createElement('div');
-  response.className = 'assistant-response';
-  const question = document.createElement('span');
-  question.className = 'response-question';
-  question.textContent = description || item.title;
-  const answer = document.createElement('div');
-  answer.className = 'response-answer';
-  const avatar = document.createElement('span');
-  avatar.className = 'assistant-avatar';
-  avatar.textContent = '✳';
-  const bubble = document.createElement('div');
-  bubble.className = 'response-bubble';
-  const heading = document.createElement('strong');
-  heading.textContent = `Langkah awal · ${item.title}`;
-  const list = document.createElement('ol');
-  item.steps.forEach(step => {
-    const li = document.createElement('li');
-    li.textContent = step;
-    list.append(li);
-  });
-  const followup = document.createElement('p');
-  followup.className = 'response-followup';
-  followup.textContent = item.followup;
-  bubble.append(heading, list, followup);
-  answer.append(avatar, bubble);
-  const actions = document.createElement('div');
-  actions.className = 'response-actions';
-  const resolved = document.createElement('button');
-  resolved.type = 'button';
-  resolved.textContent = 'Sudah teratasi';
-  resolved.addEventListener('click', () => {
-    actions.replaceChildren();
-    const note = document.createElement('span');
-    note.className = 'form-hint';
-    note.textContent = 'Bagus! Pada sistem lengkap, solusi ini akan dicatat sebagai bantuan mandiri.';
-    actions.append(note);
-  });
-  const createTicket = document.createElement('button');
-  createTicket.type = 'button';
-  createTicket.textContent = 'Buat tiket teknisi';
-  createTicket.addEventListener('click', createDemoTicket);
-  actions.append(resolved, createTicket);
-  response.append(question, answer, actions);
-  assistantContent.append(response);
-}
+      <div class="dashboard-stage" aria-label="Pratinjau dashboard DeskFlow">
+        <div class="decor decor-one"></div><div class="decor decor-two"></div>
+        <div class="dashboard-card">
+          <div class="dash-top"><div><div class="dash-kicker">OVERVIEW</div><h2>Halo, Rani <span>✦</span></h2><p>Ringkasan layanan hari ini</p></div><button class="icon-button" aria-label="Notifikasi" type="button">♧<i></i></button></div>
+          <div class="stat-grid">
+            <div class="stat-card"><span class="stat-icon violet">▤</span><span class="stat-label">Tiket aktif</span><strong>12</strong><span class="stat-note positive">↓ 18% minggu ini</span></div>
+            <div class="stat-card"><span class="stat-icon green">◷</span><span class="stat-label">Rata-rata respons</span><strong>24 <small>menit</small></strong><span class="stat-note">Sesuai target layanan</span></div>
+          </div>
+          <div class="ticket-preview-head"><div><h3>Tiket terbaru</h3><span>Perlu perhatian</span></div><a href="#demo">Lihat semua <span aria-hidden="true">→</span></a></div>
+          <div class="ticket-row"><span class="ticket-symbol wifi-symbol">⌁</span><div class="ticket-info"><strong>Wi-Fi tidak terhubung</strong><span>TK-2048 · Jaringan</span></div><span class="status-pill status-progress"><i></i> Ditangani</span></div>
+          <div class="ticket-row"><span class="ticket-symbol laptop-symbol">▣</span><div class="ticket-info"><strong>Laptop berjalan lambat</strong><span>TK-2047 · Perangkat</span></div><span class="status-pill status-wait"><i></i> Menunggu</span></div>
+          <div class="dash-footer"><span class="online-dot"></span>Semua layanan beroperasi <span class="footer-time">Diperbarui sekarang</span></div>
+        </div>
+        <div class="ai-float"><div class="ai-icon">✳</div><div><strong>DeskFlow Assist</strong><span>Siap membantu pemecahan masalah</span></div><span class="ai-pulse"></span></div>
+      </div>
+    </section>
 
-function createDemoTicket() {
-  const item = guidance[category.value] || guidance.network;
-  ticketTitle.textContent = item.title;
-  ticketDemo.hidden = false;
-  ticketDemo.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
+    <section class="technology-strip" aria-label="Teknologi yang ditampilkan dalam project"><div class="section-wrap tech-inner"><span>MEMPERLIHATKAN KEMAMPUAN</span><div><b>JavaScript</b><b>React</b><b>SQL</b><b>REST API</b><b>Git</b></div></div></section>
 
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  const key = category.value;
-  if (!key) return;
-  showGuidance(key, detail.value.trim() || guidance[key].title);
-});
+    <section class="features-section section-wrap" id="fitur">
+      <div class="section-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> DUKUNGAN YANG TERSTRUKTUR</div><h2>Semua kebutuhan bantuan<br />dalam satu alur.</h2></div><p>Dari laporan pertama sampai konfirmasi solusi, setiap langkah dibuat transparan dan mudah diikuti.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card feature-ai"><div class="feature-icon icon-ai">✳</div><span class="feature-number">01</span><h3>AI assistance</h3><p>Asisten memandu diagnosis dengan pertanyaan bertahap, lalu menyarankan langkah perbaikan yang relevan.</p><a href="#demo" class="feature-link">Lihat pratinjau <span>↗</span></a><div class="mini-chat"><span class="mini-user">“Wi-Fi kantor saya putus.”</span><span class="mini-answer">Coba nyalakan ulang Wi-Fi. Apakah perangkat lain bisa tersambung?</span></div></article>
+        <article class="feature-card"><div class="feature-icon icon-alert">⌁</div><span class="feature-number">02</span><h3>Informasi gangguan</h3><p>Pengumuman gangguan dan pemeliharaan layanan membantu pengguna mengetahui dampak serta perkiraan pemulihan.</p><div class="feature-foot"><span class="signal-dot"></span> Status layanan terkini</div></article>
+        <article class="feature-card"><div class="feature-icon icon-form">▤</div><span class="feature-number">03</span><h3>Form tiket terpandu</h3><p>Form menyesuaikan kategori masalah agar informasi penting terkumpul sejak awal dan tiket lebih mudah ditangani.</p><div class="feature-foot">Kategori · Dampak · Lampiran</div></article>
+        <article class="feature-card"><div class="feature-icon icon-track">⌁</div><span class="feature-number">04</span><h3>Pelacakan & notifikasi</h3><p>Pengguna dapat melihat status, riwayat pembaruan, dan menerima pemberitahuan ketika ada perkembangan tiket.</p><div class="feature-foot"><span class="timeline-mini"><i></i><i></i><i></i></span> Riwayat tiket terbuka</div></article>
+        <article class="feature-card"><div class="feature-icon icon-calendar">▦</div><span class="feature-number">05</span><h3>Jadwal teknisi</h3><p>Atur waktu bantuan dan pantau penugasan teknisi sesuai kebutuhan serta ketersediaan.</p><div class="feature-foot">Pilih waktu bantuan yang cocok</div></article>
+        <article class="feature-card"><div class="feature-icon icon-done">✓</div><span class="feature-number">06</span><h3>Konfirmasi solusi</h3><p>Pengguna mengonfirmasi hasil penyelesaian atau membuka kembali tiket jika gangguan masih terjadi.</p><div class="feature-foot"><span class="check-ring">✓</span> Pengguna memegang kendali</div></article>
+      </div>
+    </section>
 
-document.querySelectorAll('.suggestion-chips button').forEach(button => {
-  button.addEventListener('click', () => {
-    const key = button.dataset.category;
-    category.value = key;
-    detail.value = button.textContent;
-    showGuidance(key, button.textContent);
-  });
-});
+    <section class="workflow-section" id="alur"><div class="section-wrap workflow-inner"><div class="workflow-copy"><div class="eyebrow eyebrow-light"><span class="eyebrow-dot"></span> CARA KERJA</div><h2>Dari kendala<br />menjadi solusi.</h2><p>Pengguna bisa mencoba bantuan mandiri lebih dulu. Jika masalah belum teratasi, sistem meneruskan informasi yang sudah terkumpul ke tim teknis.</p><a href="#demo" class="button button-white">Coba form terpandu <span>→</span></a></div><div class="workflow-steps"><div class="workflow-step"><span class="step-index">01</span><div class="step-icon">⌕</div><div><h3>Ceritakan kendalanya</h3><p>Pilih layanan dan jelaskan gejala melalui form yang terarah.</p></div><span class="step-check">✓</span></div><div class="workflow-connector"></div><div class="workflow-step"><span class="step-index">02</span><div class="step-icon step-ai">✳</div><div><h3>Coba solusi mandiri</h3><p>AI mengajukan pertanyaan dan menyarankan langkah troubleshooting.</p></div><span class="step-check">✓</span></div><div class="workflow-connector"></div><div class="workflow-step"><span class="step-index">03</span><div class="step-icon">⚒</div><div><h3>Lanjutkan ke teknisi</h3><p>Buat tiket, atur bantuan, lalu pantau hingga solusi dikonfirmasi.</p></div><span class="step-check">✓</span></div></div></div></section>
 
-document.getElementById('reopenTicket').addEventListener('click', event => {
-  const button = event.currentTarget;
-  button.textContent = button.textContent === 'Buka ulang tiket' ? 'Tiket dibuka ulang' : 'Buka ulang tiket';
-  button.classList.toggle('reopened');
-});
+    <section class="demo-section section-wrap" id="demo">
+      <div class="demo-heading"><div class="eyebrow"><span class="eyebrow-dot"></span> AREA DEMO</div><h2>Mulai dari masalahmu.</h2><p>Isi form singkat ini untuk melihat contoh alur bantuan mandiri.</p></div>
+      <div class="demo-grid">
+        <form class="guided-form" id="ticketForm">
+          <div class="form-title"><div><span class="form-step-label">LANGKAH 1 DARI 2</span><h3>Buat laporan gangguan</h3></div><span class="form-icon">▤</span></div>
+          <label for="issueCategory">Apa yang bermasalah?</label>
+          <select id="issueCategory" required><option value="">Pilih kategori masalah</option><option value="network">Jaringan & Wi-Fi</option><option value="device">Laptop atau komputer</option><option value="account">Akun & akses</option><option value="software">Aplikasi atau software</option></select>
+          <label for="issueDetail">Ceritakan gejalanya</label>
+          <textarea id="issueDetail" rows="3" placeholder="Contoh: Wi-Fi tersambung, tetapi tidak bisa membuka website." required></textarea>
+          <div class="form-hint"><span>ⓘ</span> Jangan sertakan kata sandi atau data rahasia.</div>
+          <button class="button button-primary form-submit" type="submit">Minta saran AI <span>✳</span></button>
+          <p class="demo-disclaimer">Demo interaktif · saran saat ini berupa contoh</p>
+        </form>
+        <div class="assistant-panel" aria-live="polite">
+          <div class="assistant-header"><div class="assistant-avatar">✳</div><div><strong>DeskFlow Assist</strong><span><i></i> Asisten troubleshooting</span></div><span class="preview-tag">PRATINJAU</span></div>
+          <div class="assistant-content" id="assistantContent"><div class="assistant-welcome"><span class="welcome-sparkle">✳</span><h3>Masalah apa yang kamu hadapi?</h3><p>Pilih kategori dan jelaskan gejalanya. Aku akan menampilkan contoh langkah awal yang bisa dicoba.</p><div class="suggestion-chips"><button type="button" data-category="network">Wi-Fi bermasalah</button><button type="button" data-category="device">Laptop lambat</button><button type="button" data-category="account">Tidak bisa login</button></div></div></div>
+          <div class="assistant-bottom"><span>✦</span> Respons AI sesungguhnya akan diintegrasikan pada tahap berikutnya.</div>
+        </div>
+      </div>
+      <div class="ticket-demo" id="ticketDemo" hidden><div class="ticket-demo-copy"><span class="success-mark">✓</span><div><span class="form-step-label">TIKET DEMO BERHASIL DIBUAT</span><h3 id="ticketTitle">Tiket layanan</h3><p>Contoh alur status tiket — belum disimpan ke server.</p></div></div><div class="ticket-status"><span class="status-pill status-progress"><i></i> Menunggu penanganan</span><button type="button" class="reopen-button" id="reopenTicket">Buka ulang tiket</button></div><div class="ticket-timeline"><span class="timeline-node active"></span><span class="timeline-line"></span><span class="timeline-node"></span><span class="timeline-line"></span><span class="timeline-node"></span><div><b>Laporan diterima</b><small>Baru saja</small></div><div><b>Ditangani teknisi</b><small>Menunggu penugasan</small></div><div><b>Konfirmasi solusi</b><small>Setelah penanganan</small></div></div></div>
+    </section>
+  </main>
 
-const menuToggle = document.getElementById('menuToggle');
-const mainNav = document.getElementById('mainNav');
-menuToggle.addEventListener('click', () => {
-  const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-  menuToggle.setAttribute('aria-expanded', String(!expanded));
-  mainNav.classList.toggle('open', !expanded);
-});
-mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-  mainNav.classList.remove('open');
-  menuToggle.setAttribute('aria-expanded', 'false');
-}));
+  <footer class="site-footer"><div class="section-wrap footer-inner"><a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>desk<span class="brand-light">flow</span></span></a><p>Konsep Service Desk Management System · Portfolio project</p><a href="#home">Kembali ke atas ↑</a></div></footer>
+</body>
+</html>
