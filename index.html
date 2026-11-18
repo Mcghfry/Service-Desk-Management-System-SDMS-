@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who's Al Ghifary</title>
+
+  <!-- Font Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS External -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+  
+  <script>
+const WORKER_URL = 'https://masmasbiasa.bacok-fary.workers.dev';
+
+let isWaitingForAI = false;
+
+async function sendQuestion() {
+  const input = document.getElementById('questionInput');
+  const messages = document.getElementById('messages');
+  const button = document.querySelector('.ask-form button');
+  const question = input.value.trim();
+
+  if (!question || isWaitingForAI) return;
+  isWaitingForAI = true;
+  button.disabled = true;
+  button.textContent = 'Menunggu…';
+
+  const scrollToLatest = () => requestAnimationFrame(() => {
+    messages.scrollTop = messages.scrollHeight;
+  });
+
+  const userDiv = document.createElement('div');
+  userDiv.className = 'user-msg';
+  userDiv.textContent = 'You : ' + question;
+  messages.appendChild(userDiv);
+  input.value = '';
+
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'ai-msg ai-thinking';
+  aiDiv.setAttribute('role', 'status');
+  aiDiv.setAttribute('aria-live', 'polite');
+  aiDiv.setAttribute('aria-atomic', 'true');
+  const label = document.createElement('span');
+  label.textContent = 'Zenithra👧🏼 sedang berpikir…';
+  aiDiv.appendChild(label);
+  const dots = document.createElement('span');
+  dots.className = 'thinking-dots';
+  dots.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < 3; i++) {
+    dots.appendChild(document.createElement('span'));
+  }
+  aiDiv.appendChild(dots);
+  messages.appendChild(aiDiv);
+  scrollToLatest();
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60000);
+
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: question }),
+      signal: controller.signal
+    });
+    const data = await response.json();
+    if (response.ok && data.reply) {
+      aiDiv.textContent = 'Zenithra👧🏼 : ' + data.reply;
+    } else {
+      aiDiv.textContent = 'Zenithra👧🏼 : ' + (data.error || 'AI service error');
+      console.error('Worker response:', data);
+    }
+  } catch (err) {
+    aiDiv.textContent = err.name === 'AbortError'
+      ? 'Zenithra👧🏼 : Jawaban terlalu lama. Silakan coba lagi.'
+      : 'Zenithra👧🏼 : Failed to connect to AI service.';
+  } finally {
+    clearTimeout(timeout);
+    aiDiv.classList.remove('ai-thinking');
+    isWaitingForAI = false;
+    button.disabled = false;
+    button.textContent = 'Send';
+    scrollToLatest();
+  }
+}
+
+// Slideshow foto profil: letakkan foto di folder yang sama dengan index.html.
+const profilePhotos = ['mypt.png', 'mypt-2.png', 'mypt-3.png'];
+let currentProfilePhoto = 0;
+let profileSlideTimer;
+
+function showProfilePhoto(index) {
+  const image = document.getElementById('profilePhoto');
+  const counter = document.getElementById('profilePhotoCounter');
+  if (!image || !profilePhotos.length) return;
+
+  currentProfilePhoto = (index + profilePhotos.length) % profilePhotos.length;
+  image.classList.remove('photo-enter');
+  image.src = profilePhotos[currentProfilePhoto];
+  image.alt = `Foto profil ${currentProfilePhoto + 1}`;
+  void image.offsetWidth;
+  image.classList.add('photo-enter');
+
+  if (counter) {
+    counter.textContent = `${currentProfilePhoto + 1} / ${profilePhotos.length}`;
+  }
+}
+
+function startProfileSlideshow() {
+  clearInterval(profileSlideTimer);
+  profileSlideTimer = setInterval(() => {
+    showProfilePhoto(currentProfilePhoto + 1);
+  }, 5000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const previous = document.getElementById('previousProfilePhoto');
+  const next = document.getElementById('nextProfilePhoto');
+
+  previous?.addEventListener('click', () => {
+    showProfilePhoto(currentProfilePhoto - 1);
+    startProfileSlideshow();
+  });
+
+  next?.addEventListener('click', () => {
+    showProfilePhoto(currentProfilePhoto + 1);
+    startProfileSlideshow();
+  });
+
+  showProfilePhoto(0);
+  startProfileSlideshow();
+});
+</script>
+  
+<body>
+  <section class="hero">
+    <div class="container">
+
+      <!-- Teks kiri -->
+      <div class="left-text">
+        Who Is<br>This Guy?
+      </div>
+
+      <!-- Foto tengah -->
+      <div class="profile-wrapper">
+        <div class="profile-card">
+          <img id="profilePhoto" src="mypt.png" alt="Foto profil 1">
+          <button class="photo-nav photo-nav-previous" id="previousProfilePhoto"
+                  type="button" aria-label="Foto sebelumnya">‹</button>
+          <button class="photo-nav photo-nav-next" id="nextProfilePhoto"
+                  type="button" aria-label="Foto berikutnya">›</button>
+          <span class="photo-counter" id="profilePhotoCounter" aria-live="polite">1 / 3</span>
+        </div>
+      </div>
+
+      <!-- Form kanan -->
+      <div class="right-box">
+        <h2>Ask me!</h2>
+        <p class="description">If you have any questions, feel free to ask me anything. My assistant will do her best to answer your questions.</p>
+        <p class="description">Maybe you can try to ask "Who is this handsome guy?😏"</p>
+
+<form class="ask-form" onsubmit="event.preventDefault(); sendQuestion();">
+  <input id="questionInput" type="text" placeholder="Ask me anything..." required>
+  <button type="submit">Send</button>
+</form>
+
+<div id="messages" class="messages"
+     style="width:100%;
+            min-height:220px;
+            max-height:520px;
+            overflow-y:auto;
+            padding:20px;
+            border-radius:22px;
+            background:rgba(255,255,255,0.12);
+            border:1px solid rgba(255,255,255,0.18);
+            box-shadow:0 12px 30px rgba(0,0,0,0.28);
+            display:flex;
+            flex-direction:column;
+            gap:14px;">
+</div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+ 
+</html>
