@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<header class="site-header">
+    <a class="brand" href="#home" aria-label="DeskFlow beranda">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      <span>desk<span class="brand-light">flow</span></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka navigasi" aria-expanded="false"><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Navigasi utama">
+      <a href="#fitur">Fitur</a>
+      <a href="#alur">Alur kerja</a>
+      <a href="#demo">Coba demo</a>
+      <a class="nav-cta" href="#demo">Jelajahi sistem <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+<section class="demo-section section-wrap" id="demo">
+      <div class="demo-heading"><div class="eyebrow"><span class="eyebrow-dot"></span> AREA DEMO</div><h2>Mulai dari masalahmu.</h2><p>Isi form singkat ini untuk melihat contoh alur bantuan mandiri.</p></div>
+      <div class="demo-grid">
+        <form class="guided-form" id="ticketForm">
+          <div class="form-title"><div><span class="form-step-label">LANGKAH 1 DARI 2</span><h3>Buat laporan gangguan</h3></div><span class="form-icon">▤</span></div>
+          <label for="issueCategory">Apa yang bermasalah?</label>
+          <select id="issueCategory" required><option value="">Pilih kategori masalah</option><option value="network">Jaringan & Wi-Fi</option><option value="device">Laptop atau komputer</option><option value="account">Akun & akses</option><option value="software">Aplikasi atau software</option></select>
+          <label for="issueDetail">Ceritakan gejalanya</label>
+          <textarea id="issueDetail" rows="3" placeholder="Contoh: Wi-Fi tersambung, tetapi tidak bisa membuka website." required></textarea>
+          <div class="form-hint"><span>ⓘ</span> Jangan sertakan kata sandi atau data rahasia.</div>
+          <button class="button button-primary form-submit" type="submit">Minta saran AI <span>✳</span></button>
+          <p class="demo-disclaimer">Demo interaktif · saran saat ini berupa contoh</p>
+        </form>
+        <div class="assistant-panel" aria-live="polite">
+          <div class="assistant-header"><div class="assistant-avatar">✳</div><div><strong>DeskFlow Assist</strong><span><i></i> Asisten troubleshooting</span></div><span class="preview-tag">PRATINJAU</span></div>
+          <div class="assistant-content" id="assistantContent"><div class="assistant-welcome"><span class="welcome-sparkle">✳</span><h3>Masalah apa yang kamu hadapi?</h3><p>Pilih kategori dan jelaskan gejalanya. Aku akan menampilkan contoh langkah awal yang bisa dicoba.</p><div class="suggestion-chips"><button type="button" data-category="network">Wi-Fi bermasalah</button><button type="button" data-category="device">Laptop lambat</button><button type="button" data-category="account">Tidak bisa login</button></div></div></div>
+          <div class="assistant-bottom"><span>✦</span> Respons AI sesungguhnya akan diintegrasikan pada tahap berikutnya.</div>
+        </div>
+      </div>
+      <div class="ticket-demo" id="ticketDemo" hidden><div class="ticket-demo-copy"><span class="success-mark">✓</span><div><span class="form-step-label">TIKET DEMO BERHASIL DIBUAT</span><h3 id="ticketTitle">Tiket layanan</h3><p>Contoh alur status tiket — belum disimpan ke server.</p></div></div><div class="ticket-status"><span class="status-pill status-progress"><i></i> Menunggu penanganan</span><button type="button" class="reopen-button" id="reopenTicket">Buka ulang tiket</button></div><div class="ticket-timeline"><span class="timeline-node active"></span><span class="timeline-line"></span><span class="timeline-node"></span><span class="timeline-line"></span><span class="timeline-node"></span><div><b>Laporan diterima</b><small>Baru saja</small></div><div><b>Ditangani teknisi</b><small>Menunggu penugasan</small></div><div><b>Konfirmasi solusi</b><small>Setelah penanganan</small></div></div></div>
+    </section>
