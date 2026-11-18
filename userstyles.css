@@ -109,16 +109,6 @@ button, input, select, textarea {
   color: var(--purple);
 }
 
-.nav-cta {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 11px 16px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  color: var(--ink);
-}
-
 .nav-cta span {
   font-size: 16px;
   color: var(--purple);
