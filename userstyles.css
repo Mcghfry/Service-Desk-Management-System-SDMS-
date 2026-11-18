@@ -1,5 +1,89 @@
 
 /* =================================================_
+   Site Header & Navigation
+   ================================================= */
+.site-header {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 max(24px, calc((100% - 1160px)/2));
+  background: rgba(255, 255, 255, 0.92);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(232, 235, 243, 0.8);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 800 21px var(--display);
+  letter-spacing: -1px;
+}
+
+.brand-light {
+  color: #8891a5;
+  font-weight: 500;
+}
+
+.brand-mark {
+  width: 27px;
+  height: 27px;
+  background: #725be9;
+  border-radius: 9px;
+  display: grid;
+  grid-template-columns: repeat(2, 5px);
+  grid-template-rows: repeat(2, 5px);
+  gap: 3px;
+  align-content: center;
+  justify-content: center;
+  transform: rotate(-5deg);
+}
+
+.brand-mark span {
+  background: #fff;
+  border-radius: 2px;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  font-size: 13px;
+  color: #59647b;
+  font-weight: 600;
+}
+
+.main-nav > a:not(.nav-cta):hover,
+.text-link:hover {
+  color: var(--purple);
+}
+
+.nav-cta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+}
+
+.nav-cta span {
+  font-size: 16px;
+  color: var(--purple);
+}
+
+.menu-toggle {
+  display: none;
+}
+
+
+
+/* =================================================_
    Demo Section & Assistant Panel
    ================================================= */
 .demo-section {
